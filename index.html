@@ -8,30 +8,24 @@
     <h1>Hello, GitHub!</h1>
 </body>
 
-<h3>
-    Hi {{ .Subscriber.FirstName }}!
-</h3>
-<p>
-    This is a test e-mail campaign. Your second name is {{ .Subscriber.LastName }} and you are from {{ .Subscriber.Attribs.city }}.
-</p>
-<p>
-    Here is a <a href="https://listmonk.app@TrackLink">tracked link</a>.
-</p>
-<p>
-    Use the link icon in the editor toolbar or when writing raw HTML or Markdown,
-    simply suffix @TrackLink to the end of a URL to turn it into a tracking link. Example:
-</p>
-<pre>
-&lt;a href="https:/‌/listmonk.app@TrackLink"&gt;&lt;/a&gt;
-</pre>
-<p>
-    For help, refer to the <a href="https://listmonk.app/docs">documentation</a>.
-</p>
 </html>
 
 <script>
-  // Wait 10 seconds (10000 milliseconds) and redirect
-  setTimeout(() => {
-    window.location.href = "https://www.google.com";
-  }, 10000);
+  // Read the UUID from the URL
+  const params = new URLSearchParams(window.location.search);
+  const uuid = params.get("uuid");
+
+  // Fetch the JSON file from GitHub Pages
+  fetch("uuids.json")
+    .then(response => response.json())
+    .then(data => {
+        if(data[uuid]){
+            console.log("UUID is valid!");
+            // You can show content or redirect
+        } else {
+            console.log("UUID not found!");
+            // Optionally redirect to an error page
+        }
+    })
+    .catch(err => console.error("Failed to fetch UUID list:", err));
 </script>
