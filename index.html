@@ -14,18 +14,12 @@
   // Read the UUID from the URL
   const params = new URLSearchParams(window.location.search);
   const uuid = params.get("uuid");
-
-  // Fetch the JSON file from GitHub Pages
-  fetch("uuids.json")
-    .then(response => response.json())
-    .then(data => {
-        if(data[uuid]){
-            console.log("UUID is valid!");
-            // You can show content or redirect
-        } else {
-            console.log("UUID not found!");
-            // Optionally redirect to an error page
-        }
+    fetch("http://localhost:3000/log", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ uuid: "test-123" })
     })
-    .catch(err => console.error("Failed to fetch UUID list:", err));
+    .then(() => console.log("UUID sent to local server"))
+    .catch(err => console.error(err));
+ 
 </script>
