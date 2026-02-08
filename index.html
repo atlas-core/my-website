@@ -10,21 +10,13 @@
 
 </html>
 
-<!-- <script>
- 
-    fetch("http://localhost:3000/log", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ uuid: "test-123" })
-    })
-    .then(() => console.log("UUID sent to local server"))
-    .catch(err => console.error(err));
- 
-</script> -->
-
 <script>
-  fetch("https://script.google.com/macros/s/AKfycbykmjqNjg159iPbahLM661UoKw8qa1BaXipF5n3BHHXkCvTtEgZqNLkOAehlaFH-Q8MmQ/exec?uuid=550e8400-e29b-41d4-a716-446655440033&mode=redirect")
-    .then(res => res.text())
-    .then(() => console.log("UUID sent successfully"))
-    .catch(err => console.error(err));
+  // Wait 10 seconds (10000 milliseconds) and redirect
+  setTimeout(() => {
+    window.location.href = "https://www.facebook.com";
+  }, 10000);
 </script>
+
+
+
+ 
