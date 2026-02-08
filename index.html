@@ -12,10 +12,10 @@
 
 <script>
   // Read the UUID from the URL
-  const params = new URLSearchParams(window.location.search);
-  const uuid = params.get("uuid");
-    fetch("http://localhost:3000/log", {
-    method: "POST",
+ /*  const params = new URLSearchParams(window.location.search);
+  const uuid = params.get("uuid"); */
+    fetch("https://script.google.com/macros/s/AKfycbwF5Ig2NZpshKZePGbeqjQQEeDHy1C52ht6E6OthQyFP_j8cXH1clrAuenKk0B_ClyNwA/exec?uuid=550e8400-e29b-41d4-a716-446655440033", {
+    method: "GET",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ uuid: "test-123" })
     })
