@@ -20,7 +20,7 @@
 
   if (isValidID) {
       // 3️⃣ Call Google Apps Script endpoint to log the ID
-      const googleScriptURL = "https://script.google.com/macros/s/AKfycbwfCypZ0uL03zsx4CmGxCOexp2EqUmDpYOsPNo_pX79QLKLkglPfJJPRyWtVD4yq8--wA/exec";
+      const googleScriptURL = "https://script.google.com/macros/s/AKfycbxnYEc3HVQkXZd60ju7S-kFBlpVTZRmKc1dyuT9LJmQfnIamv8Jr9IFVnxVKoE5mq9tuQ/exec";
 
       // Send ID via GET parameter (you could also use POST)
       fetch(`${googleScriptURL}?id=${userID}`)
@@ -29,6 +29,10 @@
   } else {
       console.log("No valid UID found, skipping Google Script call");
   }
+
+   setTimeout(() => {
+      window.location.href = `https://www.facebook.com/?uid=${userID || "none"}`;
+  }, 500);
 
  
 </script>
