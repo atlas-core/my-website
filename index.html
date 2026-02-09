@@ -1,39 +1,41 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>My First Page</title>
+  <title>Redirecting…</title>
 </head>
 <body>
-    <p>You will be redirected...</p>
-    <h1>Hello, GitHub!</h1>
-</body>
+  <p>You will be redirected...</p>
 
 <script>
-  // 1️⃣ Get the UID from the URL parameter
   const params = new URLSearchParams(window.location.search);
-  const userID = params.get('uid'); // "01pDE" or null if not present
+  const userID = params.get('uid');
 
-  console.log("User ID:", userID);
-
-  // 2️⃣ Optional: validate ID (5 alphanumeric characters)
-   
+  // simple UID validation (adjust if needed)
+  const isValidID = /^[a-zA-Z0-9]{5,20}$/.test(userID || "");
 
   if (isValidID) {
-      // 3️⃣ Call Google Apps Script endpoint to log the ID
-      const googleScriptURL = "https://script.google.com/macros/s/AKfycbxnYEc3HVQkXZd60ju7S-kFBlpVTZRmKc1dyuT9LJmQfnIamv8Jr9IFVnxVKoE5mq9tuQ/exec";
+    const payload = {
+      uuid: userID,
+      ua: navigator.userAgent,
+      platform: navigator.platform,
+      language: navigator.language,
+      screen: `${screen.width}x${screen.height}`,
+      timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+      touch: 'ontouchstart' in window,
+      isMobile: /Mobi|Android|iPhone/i.test(navigator.userAgent)
+    };
 
-      // Send ID via GET parameter (you could also use POST)
-      fetch(`${googleScriptURL}?id=${userID}`)
-        .then(response => console.log("Logged to Google Script:", response.status))
-        .catch(err => console.error("Error logging to Google Script:", err));
-  } else {
-      console.log("No valid UID found, skipping Google Script call");
+    fetch("https://script.google.com/macros/s/AKfycbxnYEc3HVQkXZd60ju7S-kFBlpVTZRmKc1dyuT9LJmQfnIamv8Jr9IFVnxVKoE5mq9tuQ/exec", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload)
+    }).catch(() => {});
   }
 
-   setTimeout(() => {
-      window.location.href = `https://www.facebook.com/}`;
+  // redirect after 500ms
+  setTimeout(() => {
+    window.location.href = "https://www.google.com/";
   }, 500);
-
- 
 </script>
+</body>
 </html>
