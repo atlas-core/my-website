@@ -11,22 +11,17 @@
 </html>
 
 <script>
-  // Get the full path after the domain
-  const path = window.location.pathname; // e.g., "/my-website/01pDE"
-  
-  // Extract the last part (the ID)
-  const parts = path.split('/'); // splits by "/"
-  const userID = parts[parts.length - 1]; // "01pDE"
+  // Get URL parameters
+  const params = new URLSearchParams(window.location.search);
+  const userID = params.get('uid'); // "01pDE" or null if not present
 
   console.log("User ID:", userID);
 
-  // Example: redirect after 200ms
   setTimeout(() => {
-    // You can even append the ID if you want
+    // Example redirect using the ID
     window.location.href = `https://www.facebook.com/?uid=${userID}`;
   }, 200);
 </script>
-
 
 
  
