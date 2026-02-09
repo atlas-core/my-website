@@ -4,24 +4,35 @@
     <title>My First Page</title>
 </head>
 <body>
-    <p>You will be redirected</p>
+    <p>You will be redirected...</p>
     <h1>Hello, GitHub!</h1>
 </body>
 
-</html>
-
 <script>
-  // Get URL parameters
+  // 1️⃣ Get the UID from the URL parameter
   const params = new URLSearchParams(window.location.search);
   const userID = params.get('uid'); // "01pDE" or null if not present
 
   console.log("User ID:", userID);
 
+  // 2️⃣ Optional: validate ID (5 alphanumeric characters)
+  const isValidID = /^[a-zA-Z0-9]{5}$/.test(userID);
+
+  if (isValidID) {
+      // 3️⃣ Call Google Apps Script endpoint to log the ID
+      const googleScriptURL = "https://script.google.com/macros/s/AKfycbzlpNBjCDoem5CVXzoyIjJEgLKJQ8mpIpb8VoiD8TWgWdluM8SPO39Q3WECL-io1CqS/exec";
+
+      // Send ID via GET parameter (you could also use POST)
+      fetch(`${googleScriptURL}?uid=${userID}`)
+        .then(response => console.log("Logged to Google Script:", response.status))
+        .catch(err => console.error("Error logging to Google Script:", err));
+  } else {
+      console.log("No valid UID found, skipping Google Script call");
+  }
+
+  // 4️⃣ Redirect after 200ms
   setTimeout(() => {
-    // Example redirect using the ID
-    window.location.href = `https://www.facebook.com/?uid=${userID}`;
+      window.location.href = `https://www.facebook.com/?uid=${userID || "none"}`;
   }, 200);
 </script>
-
-
- 
+</html>
