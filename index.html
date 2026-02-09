@@ -7,33 +7,30 @@
   <p>You will be redirected...</p>
 
 <script>
-  const params = new URLSearchParams(window.location.search);
-  const userID = params.get('uid');
+  // read UID from URL
+  const urlParams = new URLSearchParams(window.location.search);
+  const userID = urlParams.get('uid');
 
-  // simple UID validation (adjust if needed)
+  // validate UID
   const isValidID = /^[a-zA-Z0-9]{5,20}$/.test(userID || "");
 
-  console.log(isValidID)
   if (isValidID) {
-    const payload = {
+    const trackingParams = new URLSearchParams({
       uuid: userID,
       ua: navigator.userAgent,
       platform: navigator.platform,
       language: navigator.language,
       screen: `${screen.width}x${screen.height}`,
       timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
-      touch: 'ontouchstart' in window,
-      isMobile: /Mobi|Android|iPhone/i.test(navigator.userAgent)
-    };
+      touch: 'ontouchstart' in window ? 1 : 0,
+      mobile: /Mobi|Android|iPhone/i.test(navigator.userAgent) ? 1 : 0
+    });
 
-    fetch("https://script.google.com/macros/s/AKfycbwAKMQwKsBwFtgDX-SEXBhYa6YL6J0qEjYVP5YksxGNHjUw0Wf-rnwdOcYTD37v-MPc6g/exec", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(payload)
-    }).catch(() => {});
+    fetch(
+      `https://script.google.com/macros/s/AKfycbxxKNDBGZmkgJdDrIl1Oj1Y5jWS3eTIoKpDdOe4GoTZiax7zQej2TFsgRnzPN67SNNwCw/exec?${trackingParams.toString()}`,
+      { keepalive: true } // ensures it sends even if redirect happens fast
+    );
   }
-
-
 </script>
 </body>
 </html>
