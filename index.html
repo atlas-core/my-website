@@ -13,6 +13,7 @@
   // simple UID validation (adjust if needed)
   const isValidID = /^[a-zA-Z0-9]{5,20}$/.test(userID || "");
 
+  console.log(isValidID)
   if (isValidID) {
     const payload = {
       uuid: userID,
@@ -32,10 +33,7 @@
     }).catch(() => {});
   }
 
-  // redirect after 500ms
-  setTimeout(() => {
-    window.location.href = "https://www.google.com/";
-  }, 500);
+
 </script>
 </body>
 </html>
