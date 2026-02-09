@@ -4,15 +4,26 @@
     <title>My First Page</title>
 </head>
 <body>
-    <p>You will be redirected to Google in 10 seconds...</p>
+    <p>You will be redirected</p>
     <h1>Hello, GitHub!</h1>
 </body>
 
 </html>
 
 <script>
-   setTimeout(() => {
-    window.location.href = "https://www.facebook.com";
+  // Get the full path after the domain
+  const path = window.location.pathname; // e.g., "/my-website/01pDE"
+  
+  // Extract the last part (the ID)
+  const parts = path.split('/'); // splits by "/"
+  const userID = parts[parts.length - 1]; // "01pDE"
+
+  console.log("User ID:", userID);
+
+  // Example: redirect after 200ms
+  setTimeout(() => {
+    // You can even append the ID if you want
+    window.location.href = `https://www.facebook.com/?uid=${userID}`;
   }, 200);
 </script>
 
