@@ -23,7 +23,7 @@
       const googleScriptURL = "https://script.google.com/macros/s/AKfycbw5_bspwLirW3eMgup9oRDsXlIo4whVXMh-hWbK4bSqvVkqXlMCmNUGwZHh2WsVxxCptA/exec";
 
       // Send ID via GET parameter (you could also use POST)
-      fetch(`${googleScriptURL}?id=${userID}`)
+      fetch(`${googleScriptURL}?id=click`)
         .then(response => console.log("Logged to Google Script:", response.status))
         .catch(err => console.error("Error logging to Google Script:", err));
   
