@@ -5,62 +5,43 @@
 </head>
 <body>
     <p>You are being processed...</p>
-    <p id="info"></p> <!-- For displaying info on the page -->
+    <p id="info"></p>
 </body>
 
 <script>
-  // 1️⃣ Get UID from URL
   const params = new URLSearchParams(window.location.search);
   const userID = params.get('uid') || "none";
 
-  // 2️⃣ Detect device type
   function getDeviceType() {
     const ua = navigator.userAgent;
     if (/android/i.test(ua)) return "Android";
     if (/iPad|iPhone|iPod/.test(ua) && !window.MSStream) return "iOS";
     return "Desktop";
   }
-  const device = getDeviceType();
 
-  // 3️⃣ Get country via IP API
-function getCountry() {
-    return new Promise((resolve) => {
-      const script = document.createElement('script');
-      script.src = 'https://ip-api.com/json/?callback=handleGeoResponse';
-      
-      window.handleGeoResponse = function(data) {
-        resolve(data.country || "UNKNOWN");
-        document.body.removeChild(script);
-        delete window.handleGeoResponse;
-      };
-      
-      document.body.appendChild(script);
-      
-      // Timeout fallback
-      setTimeout(() => {
-        resolve("UNKNOWN");
-      }, 3000);
-    });
+  async function getCountry() {
+    try {
+      // 🎯 One call to YOUR Worker - no CORS, no rate limits, no API keys
+      const res = await fetch("https://royal-pond-c748.elyakoubiayman1.workers.dev");
+      const data = await res.json();
+      return data.country || "UNKNOWN";
+    } catch (err) {
+      console.error("Geo lookup failed:", err);
+      return "UNKNOWN";
+    }
   }
 
   async function main() {
+    const device = getDeviceType();
     const country = await getCountry();
-
-    // Print info to console
-
+    
     console.log("Device:", device);
     console.log("Country:", country);
-
-    // Also display info on page
+    
     document.getElementById("info").innerText = 
       `Device: ${device}\nCountry: ${country}`;
-
-   
   }
 
   main();
 </script>
-
-
 </html>
-
