@@ -1,36 +1,59 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>My First Page</title>
+    <title>Smart Link Test</title>
 </head>
 <body>
-    <p>You will be redirected...</p>
-    <h1>Hello, GitHub!</h1>
+    <p>You are being processed...</p>
+    <p id="info"></p> <!-- For displaying info on the page -->
 </body>
 
 <script>
-  // 1️⃣ Get the UID from the URL parameter
+  // 1️⃣ Get UID from URL
   const params = new URLSearchParams(window.location.search);
-  const userID = params.get('uid'); // "01pDE" or null if not present
+  const userID = params.get('uid') || "none";
 
-  console.log("User ID:", userID);
+  // 2️⃣ Detect device type
+  function getDeviceType() {
+    const ua = navigator.userAgent;
+    if (/android/i.test(ua)) return "Android";
+    if (/iPad|iPhone|iPod/.test(ua) && !window.MSStream) return "iOS";
+    return "Desktop";
+  }
+  const device = getDeviceType();
 
-  // 2️⃣ Optional: validate ID (5 alphanumeric characters)
-   
+  // 3️⃣ Get country via IP API
+  async function getCountry() {
+    try {
+      const res = await fetch("https://ipapi.co/json/");
+      const data = await res.json();
+      return data.country_name || "UNKNOWN";
+    } catch (err) {
+      console.error("Geo lookup failed", err);
+      return "UNKNOWN";
+    }
+  }
 
- 
-      // 3️⃣ Call Google Apps Script endpoint to log the ID
-      const googleScriptURL = "https://script.google.com/macros/s/AKfycbw5_bspwLirW3eMgup9oRDsXlIo4whVXMh-hWbK4bSqvVkqXlMCmNUGwZHh2WsVxxCptA/exec";
+  async function main() {
+    const country = await getCountry();
 
-      // Send ID via GET parameter (you could also use POST)
-      fetch(`${googleScriptURL}?id=click`)
-        .then(response => console.log("Logged to Google Script:", response.status))
-        .catch(err => console.error("Error logging to Google Script:", err));
-  
-   setTimeout(() => {
-      window.location.href = `https://www.facebook.com/?uid=${userID || "none"}`;
-  }, 500);
+    // Print info to console
+    console.log("UID:", userID);
+    console.log("Device:", device);
+    console.log("Country:", country);
 
- 
+    // Also display info on page
+    document.getElementById("info").innerText = 
+      `UID: ${userID}\nDevice: ${device}\nCountry: ${country}`;
+
+    // Optional: log to Google Script
+    const googleScriptURL = "https://script.google.com/macros/s/AKfycbw5_bspwLirW3eMgup9oRDsXlIo4whVXMh-hWbK4bSqvVkqXlMCmNUGwZHh2WsVxxCptA/exec";
+    fetch(`${googleScriptURL}?id=${userID}&device=${device}&country=${country}`)
+      .then(r => console.log("Logged:", r.status))
+      .catch(e => console.error("Logging error:", e));
+  }
+
+  main();
 </script>
 </html>
+
