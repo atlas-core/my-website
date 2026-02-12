@@ -23,16 +23,22 @@
   const device = getDeviceType();
 
   // 3️⃣ Get country via IP API
-  async function getCountry() {
-    try {
-      const res = await fetch("https://ipapi.co/json/");
-      const data = await res.json();
-      return data.country_name || "UNKNOWN";
-    } catch (err) {
-      console.error("Geo lookup failed", err);
-      return "UNKNOWN";
-    }
-  }
+async function getCountry() {
+  return new Promise((resolve, reject) => {
+    const script = document.createElement('script');
+    const callbackName = 'geoCallback_' + Date.now();
+    
+    window[callbackName] = function(data) {
+      resolve(data.country_name || "UNKNOWN");
+      delete window[callbackName];
+      script.remove();
+    };
+
+    script.src = `https://ipapi.co/json/?callback=${callbackName}`;
+    script.onerror = () => resolve("UNKNOWN");
+    document.body.appendChild(script);
+  });
+}
 
   async function main() {
     const country = await getCountry();
