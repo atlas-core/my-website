@@ -23,20 +23,25 @@
   const device = getDeviceType();
 
   // 3️⃣ Get country via IP API
-async function getCountry() {
-  try {
-    // Direct fetch from IP API
-    const res = await fetch("https://ipwhois.app/json/");
-    console.log(res)
-    if (!res.ok) throw new Error("Network response not OK");
-
-    const data = await res.json();
-    return data.country || "UNKNOWN"; // Return country name
-  } catch (err) {
-    console.error("Geo lookup failed:", err);
-    return "UNKNOWN";
+function getCountry() {
+    return new Promise((resolve) => {
+      const script = document.createElement('script');
+      script.src = 'https://ip-api.com/json/?callback=handleGeoResponse';
+      
+      window.handleGeoResponse = function(data) {
+        resolve(data.country || "UNKNOWN");
+        document.body.removeChild(script);
+        delete window.handleGeoResponse;
+      };
+      
+      document.body.appendChild(script);
+      
+      // Timeout fallback
+      setTimeout(() => {
+        resolve("UNKNOWN");
+      }, 3000);
+    });
   }
-}
 
   async function main() {
     const country = await getCountry();
@@ -50,14 +55,12 @@ async function getCountry() {
     document.getElementById("info").innerText = 
       `Device: ${device}\nCountry: ${country}`;
 
-    // Optional: log to Google Script
-    const googleScriptURL = "https://script.google.com/macros/s/AKfycbw5_bspwLirW3eMgup9oRDsXlIo4whVXMh-hWbK4bSqvVkqXlMCmNUGwZHh2WsVxxCptA/exec";
-    fetch(`${googleScriptURL}?id=${userID}&device=${device}&country=${country}`)
-      .then(r => console.log("Logged:", r.status))
-      .catch(e => console.error("Logging error:", e));
+   
   }
 
   main();
 </script>
+
+
 </html>
 
