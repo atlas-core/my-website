@@ -24,20 +24,17 @@
 
   // 3️⃣ Get country via IP API
 async function getCountry() {
-  return new Promise((resolve, reject) => {
-    const script = document.createElement('script');
-    const callbackName = 'geoCallback_' + Date.now();
-    
-    window[callbackName] = function(data) {
-      resolve(data.country_name || "UNKNOWN");
-      delete window[callbackName];
-      script.remove();
-    };
+  try {
+    // Direct fetch from IP API
+    const res = await fetch("https://ipwhois.app/json/");
+    if (!res.ok) throw new Error("Network response not OK");
 
-    script.src = `https://ipapi.co/json/?callback=${callbackName}`;
-    script.onerror = () => resolve("UNKNOWN");
-    document.body.appendChild(script);
-  });
+    const data = await res.json();
+    return data.country || "UNKNOWN"; // Return country name
+  } catch (err) {
+    console.error("Geo lookup failed:", err);
+    return "UNKNOWN";
+  }
 }
 
   async function main() {
